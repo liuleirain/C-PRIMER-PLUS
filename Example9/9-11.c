@@ -12,9 +12,11 @@ int main(void)
   {
     for (i = 1; i <= num; i++)
     {
+      // printf("%lld ", Fibonacci(i));
       printf("%lld ", FibonacciLoop(i));
     }
     putchar('\n');
+    printf("Please enter a number:");
   }
   return 0;
 }
