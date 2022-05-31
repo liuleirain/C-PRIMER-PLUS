@@ -1,7 +1,7 @@
 #include <stdio.h>
-
 void report_count();
 void accumulate(int k);
+
 int count = 0;
 
 int main(void)
@@ -9,7 +9,7 @@ int main(void)
   int value;
   register int i;
 
-  printf("Enter a positive integer (0 to quit): ");
+  printf("Enter a positive integer (0 to quit):");
   while (scanf("%d", &value) == 1 && value > 0)
   {
     ++count;
@@ -24,5 +24,5 @@ int main(void)
 
 void report_count()
 {
-  printf("Loop executed %d times\n", count);
+  printf("Lop executed %d times\n", count);
 }

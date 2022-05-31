@@ -1,6 +1,6 @@
+#include "12-12.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "12_12.c"
 
 int roll_count = 0;
 
@@ -31,5 +31,6 @@ int roll_n_dice(int dice, int sides)
 
   for (d = 0; d < dice; d++)
     total += rollem(sides);
+
   return total;
 }

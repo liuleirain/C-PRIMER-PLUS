@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "12_12.c"
+#include "12-12.h"
 
 int main(void)
 {
@@ -21,7 +21,7 @@ int main(void)
       else
       {
         printf("You should have entered an integer.");
-        printf("Let's begin again.\n");
+        printf(" Let's begin agin.\n");
         while (getchar() != '\n')
           continue;
         printf("How many sides? Enter 0 to stop.\n");
@@ -35,5 +35,6 @@ int main(void)
   }
   printf("The rollem() function was called %d times.\n", roll_count);
   printf("GOOD FORTUNE TO YOU!\n");
+
   return 0;
 }
