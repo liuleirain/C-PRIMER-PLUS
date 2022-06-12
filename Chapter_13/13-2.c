@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     fprintf(stderr, "I couldn't open the file \"%s\"\n", argv[1]);
     exit(EXIT_FAILURE);
   }
-  strncpy(name, argv[2], LEN - 5);
+  strncpy(name, argv[1], LEN - 5);
   name[LEN - 5] = '\0';
   strcat(name, ".red");
   if ((out = fopen(name, "w")) == NULL)
@@ -30,8 +30,11 @@ int main(int argc, char *argv[])
   }
   while ((ch = getc(in)) != EOF)
     if (count++ % 3 == 0)
+    {
       putc(ch, out);
+    }
   if (fclose(in) != 0 || fclose(out) != 0)
     fprintf(stderr, "Error in closing files\n");
+
   return 0;
 }

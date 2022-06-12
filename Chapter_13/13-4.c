@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #define CNTL_Z '\032'
 #define SLEN 81
+
 int main(void)
 {
   char file[SLEN];
@@ -28,4 +29,6 @@ int main(void)
   }
   putchar('\n');
   fclose(fp);
+
+  return 0;
 }

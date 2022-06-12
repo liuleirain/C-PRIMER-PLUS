@@ -7,6 +7,7 @@ int main(void)
 {
   FILE *fp;
   char words[MAX];
+
   if ((fp = fopen("wordy", "a+")) == NULL)
   {
     fprintf(stdout, "Can't open \"wordy\" file.\n");
@@ -18,7 +19,7 @@ int main(void)
   while ((fscanf(stdin, "%40s", words) == 1) && (words[0] != '#'))
     fprintf(fp, "%s\n", words);
 
-  puts("File contents:");
+  puts("File contents: ");
   rewind(fp);
   while (fscanf(fp, "%s", words) == 1)
     puts(words);
