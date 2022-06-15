@@ -6,7 +6,7 @@
 void append(FILE *source, FILE *dest);
 char *s_gets(char *st, int n);
 
-int main(void){
+int main(int argc, char *argv[]){
   FILE *fa, *fs;
   int files = 0;
   char file_app[SLEN];
