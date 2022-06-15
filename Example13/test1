@@ -1,0 +1,1 @@
+Binary function which returns first adjacent element pairs based on certain condition (as third argument). Default condition checks equality.
