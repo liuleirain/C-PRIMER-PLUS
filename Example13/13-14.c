@@ -8,9 +8,11 @@
 
 const char surstr[LEVELS + 1] = "0123456789";
 const char trans[LEVELS + 1] = " .':~*=&%#";
+void ReplaceChar(int rows, int cols, int arr[rows][cols]);
+int CleanDistortion(int(*arr)[COLS], int rows, int x, int y);
 
 int main(void) {
-  FILE* sfp, * dfp;
+  FILE* sfp;
   int numArr[ROWS][COLS];
   char fileName[SLEN];
   int i, j;
@@ -33,17 +35,39 @@ int main(void) {
     }
     ch = getc(sfp);
   }
+  for (i = 0; i < ROWS; i++) {
+    for (j = 0; j < COLS; j++) {
+      numArr[i][j] = CleanDistortion(numArr, ROWS, i, j);
+    }
+  }
+  ReplaceChar(ROWS, COLS, numArr);
+  if (fclose(sfp) != 0) {
+    fprintf(stderr, "Can't close %s\n", fileName);
+  }
+  return 0;
+}
+
+int CleanDistortion(int(*arr)[COLS], int rows, int x, int y) {
+
+}
+
+void ReplaceChar(int rows, int cols, int arr[rows][cols]) {
+  FILE* dfp;
+  int i, j;
   if ((dfp = fopen("target", "w")) == NULL) {
     fprintf(stderr, "Can't open %s\n", "target");
     exit(EXIT_FAILURE);
   }
-  for (i = 0; i < ROWS; i++) {
-    for (j = 0; j < COLS; j++) {
+  for (i = 0; i < rows; i++) {
+    for (j = 0; j < cols; j++) {
       // printf("%d", numArr[i][j]);
-      putc(trans[numArr[i][j]], dfp);
+      putc(trans[arr[i][j]], dfp);
     }
     putc('\n', dfp);
     // putchar('\n');
   }
-  return 0;
+  if (fclose(dfp) != 0) {
+    fprintf(stderr, "Can't close %s\n", "target");
+    exit(EXIT_FAILURE);
+  }
 }
