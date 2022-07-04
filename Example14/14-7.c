@@ -1,18 +1,12 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
 
 #define MAXTITL 40
 #define MAXAUTL 40
-#define MAXBKS 10
-
-char* s_gets(char* st, int n);
-char get_first(const char* st);
-int get_books(struct book pb);
-void update(struct book pb);
-void eatline();
+#define MAXBKS 3
 
 struct book {
   char title[MAXTITL];
@@ -21,165 +15,119 @@ struct book {
   bool isDel;
 };
 
+char* s_gets(char* st, int n);
+char get_first(const char* st);
+void eatline();
+void update(struct book* pb);
+
 int main(void) {
-  struct book library[MAXBKS];
+  struct book libary[MAXBKS];
   int count = 0;
   int deleted = 0;
-  int open;
-  int index, filecount;
   FILE* pbooks;
   int size = sizeof(struct book);
 
   if ((pbooks = fopen("book.dat", "r+b")) == NULL) {
-    fputs("Can't open book.dat file\n", stderr);
-    exit(1);
+    fputs("Can't open book.dat.\n", stderr);
+    exit(EXIT_FAILURE);
   }
+  // strcpy(libary[0].title, "Metric Merriment");
+  // strcpy(libary[0].author, "Polly Poetica");
+  // libary[0].value = 11.22;
+  // libary[0].isDel = false;
+  // fwrite(&libary[0], size, 1, pbooks);
 
   rewind(pbooks);
-  while (count < MAXBKS && fread(&library[count], size, 1, pbooks) == 1) {
-    if (count == 0)
-      puts("Current contents of book.dat:");
-    printf("%s by %s: $%.2f\n", library[count].title,
-      library[count].author, library[count].value);
-    count++;
-    printf("Do you want to change or delete this entry(y/n)?\n");
-    printf("Please you enter to choose: ");
+  while (count < MAXBKS && fread(&libary[count], size, 1, pbooks)) {
+    if (count == 0) {
+      puts("Current contents of data.dat.");
+    }
+
+    printf("%s by %s: $%.2f.\n", libary[count].title, libary[count].author, libary[count].value);
+    puts("Do you want to change or delete this entry(y/n):");
+    printf("Enter your choose:");
     if (get_first("yn") == 'y') {
-      printf("Enter c to change, d to delete entry: ");
+      puts("Enter c to change, d to delete entry:");
       if (get_first("cd") == 'd') {
-        library[count].isDel = true;
+        libary[count].isDel = true;
         deleted++;
-        puts("Flag marked for deletion(The space for the next book).");
       }
-      else update(library[count]);
+      else update(&libary[count]);
     }
-    count++;
+    ++count;
   }
-
-  if (count == MAXBKS) {
-    fputs("The book.dat file is full.", stderr);
-    exit(2);
+  rewind(pbooks);
+  for (int i = 0; i < MAXBKS; i++) {
+    if (libary[i].isDel == false)
+      fwrite(&libary[i], size, 1, pbooks);
   }
-  filecount = count - deleted;
-
-  if (count == MAXBKS) {
-    fputs("The book.data file is full.", stderr);
-    exit(EXIT_FAILURE);
-  }
-
-  if (deleted > 0) {
-    printf("If you delete some books, you should enter books to replace.\n");
-  }
-  puts("Please add new book titles.");
-  puts("Press [enter] at the start of a line to stop.");
-  open = 0;
-  while (filecount < MAXBKS) {
-    if (filecount < count) {
-      while (library[open].isDel == false) {
-        open++;
-      }
-      if (get_books(library[open]) == 1) {
-        break;
-      }
-    }
-    else if (get_books(library[filecount]) == 1) {
-      break;
-    }
-    filecount++;
-    if (filecount < MAXBKS) puts("Enter the next book title.");
-  }
-  puts("Here is the list of your books:");
-  for (index = 0; index < filecount; index++) {
-    if (library[index].isDel == false) {
-      printf("%s by %s: $%.2f\n", library[index].title, library[index].author, library[index].value);
-    }
-  }
-  if ((pbooks = fopen("book.dat", "wb")) == NULL) {
-    fputs("Can't open book.dat file for output.\n", stderr);
-    exit(EXIT_FAILURE);
-  }
-  for (index = 0; index < filecount; index++) {
-    if (library[index].isDel == false) {
-      fwrite(&library[index], size, 1, pbooks);
-    }
+  for (int i = 0; i < count; i++) {
+    printf("%s by %s: $%.2f.\n", libary[i].title, libary[i].author, libary[i].value);
   }
   if (fclose(pbooks) != 0) {
-    fprintf(stderr, "Error in closing file.\n");
+    fputs("Don't close the book.dat", stderr);
+    exit(EXIT_FAILURE);
   }
-  puts("Bye.\n");
 
   return 0;
 }
 
-void update(struct book pb) {
+void update(struct book* pb) {
   int ch;
 
   puts("==============================");
-  puts("t) modify title a) modify author");
-  puts("v) modify value s) quit and save changes");
+  puts("a) modify title b) modify author");
+  puts("c) modify value d) modify status");
   puts("q) quit and ignore changes");
   puts("==============================");
   printf("Please you enter to choose: ");
-  while ((ch = get_first("tavsq")) != 's' && ch != 'q') {
+  while ((ch = get_first("abcdq")) != 'q') {
     switch (ch) {
-    case 't': {
-      printf("Please enter new title: ");
-      s_gets(pb.title, MAXTITL);
+    case 'a':
+      puts("Enter the new titel:");
+      s_gets(pb->title, MAXTITL);
       break;
-    }
-    case 'a': {
-      printf("Please enter new author: ");
-      s_gets(pb.author, MAXAUTL);
+    case 'b':
+      puts("Enter the new author: ");
+      s_gets(pb->author, MAXAUTL);
       break;
-    }
-    case 'v': {
-      printf("Please enter new value:");
-      while (scanf("%f", &pb.value) != 1) {
-        eatline();
-        puts("Please enter a valid value: ");
+    case 'c':
+      puts("Enter the new value:");
+      while (scanf("%f", &pb->value) != 1) {
+        puts("Please enter a valid value.");
       }
       eatline();
       break;
+    case 'd':
+      puts("Enter 0 or 1 change status:");
+      while ((ch = get_first("01")) != '1' && ch != '0')
+      {
+        eatline();
+        puts("Enter a valid value.");
+      }
+      eatline();
+      if (ch == '0') {
+        pb->isDel = false;
+      }
+      if (ch == '1') {
+        pb->isDel = true;
+      }
     }
-    }
-
     puts("==============================");
-    puts("t) modify title a) modify author");
-    puts("v) modify value s) quit and save changes");
+    puts("a) modify title b) modify author");
+    puts("c) modify value d) modify status");
     puts("q) quit and ignore changes");
     puts("==============================");
-    printf("You can choose again: ");
-
+    printf("Please you enter to choose: ");
   }
-  return;
-}
-
-int get_books(struct book pb) {
-  int status = 0;
-
-  if (s_gets(pb.title, MAXTITL) == NULL || pb.title[0] == '\0') {
-    status = 1;
-  }
-  else {
-    printf("Now enter the author: ");
-    s_gets(pb.author, MAXAUTL);
-    printf("Now enter the value:");
-    while (scanf("%f", &pb.value) != 1) {
-      eatline();
-      puts("Please enter a valid value: ");
-    }
-    eatline();
-    pb.isDel = false;
-  }
-  return status;
 }
 
 char get_first(const char* st) {
-  int ch;
+  char ch;
 
   ch = tolower(getchar());
   while (strchr(st, ch) == NULL) {
-    printf("Invalid data! Please enter again:");
+    puts("Invalid data, Please enter again:");
     eatline();
     ch = tolower(getchar());
   }
@@ -201,7 +149,7 @@ char* s_gets(char* st, int n) {
     if (find)
       *find = '\0';
     else
-      while (getchar() != '\n')continue;
+      while (getchar() != '\n') continue;
   }
   return ret_val;
 }
