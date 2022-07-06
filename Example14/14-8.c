@@ -30,11 +30,13 @@ static struct seat seats[ALEN] = {
 };
 
 char showMenu();
+void showList(struct seat* ps[], int n);
 char get_first(char* st);
 void eatline();
 int showEmpNum(const struct seat* ps, int n);
 void showAlpList(struct seat* ps[], int n);
 void assignSeat(struct seat* ps[], int n);
+void deleteSeat(struct seat* ps[], int n);
 char* s_gets(char* st, int n);
 
 
@@ -66,6 +68,9 @@ int main(void) {
     case 'd':
       assignSeat(pt, ALEN);
       break;
+    case 'e':
+      deleteSeat(pt, ALEN);
+      break;
     }
   };
 
@@ -87,19 +92,52 @@ char* s_gets(char* st, int n) {
   return ret_val;
 }
 
+void deleteSeat(struct seat* ps[], int n) {
+  struct seat temp;
+  int dNum;
+  do {
+    puts("The seats list is :");
+    showList(ps, n);
+    puts("Enter the number of the seat to be deleted:(0 to quit)");
+    while (scanf("%d", &dNum) != 1 && (dNum > 0 && dNum < 13)) {
+      puts("Invalid value! Please enter numbers between 0 and 12 .");
+      eatline();
+    }
+    eatline();
+    for (int i = 0; i < n; i++) {
+      if (ps[i]->num == dNum) {
+        temp.num = ps[i]->num;
+        strcpy(temp.fname, "");
+        strcpy(temp.lname, "");
+        temp.isBooking = false;
+        *(ps[i]) = temp;
+      }
+    }
+  } while (0 != dNum);
+}
+
+void showList(struct seat* ps[], int n) {
+  for (int i = 0; i < n; i++) {
+    printf("The No.%d seat is %s %s.\n", ps[i]->num, ps[i]->fname, ps[i]->lname);
+  }
+}
+
 void assignSeat(struct seat* ps[], int n) {
+  struct seat temp;
   if (showEmpNum(*ps, n) == 0) return;
   for (int i = 0; i < n; i++) {
     if (ps[i]->isBooking == false) {
       puts("Do you want add customer information:(y/n)");
       if (get_first("yn") == 'n') return;
+      temp.num = ps[i]->num;
       puts("Enter customer first name:");
-      s_gets(ps[i]->fname, SLEN);
+      s_gets(temp.fname, SLEN);
       puts("Enter customer last name:");
-      s_gets(ps[i]->lname, SLEN);
+      s_gets(temp.lname, SLEN);
+      temp.isBooking = true;
+      *(ps[i]) = temp;
     }
   }
-
 }
 
 void showAlpList(struct seat* pt[], int n) {
