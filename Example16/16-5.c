@@ -3,7 +3,8 @@
 #include <time.h>
 #include <string.h>
 #define SIZE 10
-void random(const int ar[], int size, int n);
+
+void randomChoice(const int ar[], int size, int n);
 
 int main(void) {
   int ar[SIZE] = { 1, 2, 3, 6, 7, 9, 10, 13, 26, 17 };
@@ -17,7 +18,7 @@ int main(void) {
   printf("\nPlease input the number of integers (no more than 10)\n");
   printf("you want to take (q to quit):\n");
   while (scanf("%d", &num) == 1) {
-    random(ar, SIZE, num);
+    randomChoice(ar, SIZE, num);
     printf("Your next input (q to quit):\n");
   }
   puts("Bye.");
@@ -25,7 +26,7 @@ int main(void) {
   return 0;
 }
 
-void random(const int ar[], int size, int n) {
+void randomChoice(const int ar[], int size, int n) {
   int i;
   int count;
   int index;
@@ -39,7 +40,7 @@ void random(const int ar[], int size, int n) {
       index = rand() % size;
       printf("%d ", acpy[index]);
       for (i = index; i < size - 1; i++) {
-        acpy[i] = acpy[i - 1];
+        acpy[i] = acpy[i + 1];
       }
       size--;
     }
