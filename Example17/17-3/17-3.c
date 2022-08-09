@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include "movie.h"
 
 void show_list(Item item);
@@ -20,10 +20,9 @@ int main(void) {
   while (s_gets(temp.title, TSIZE) != NULL && temp.title[0] != '\0') {
     printf("Enter your rating <0-10>:\n");
     scanf("%d", &temp.rating);
-    while (getchar() != '\n')continue;
+    while (getchar() != '\n') continue;
     if (AddItem(&movies, temp) == 0) {
       fprintf(stderr, "Allocting memory error.\n");
-      break;
     }
     if (ListIsFull(&movies)) {
       fprintf(stderr, "Sorry, the list is full.\n");
@@ -36,20 +35,18 @@ int main(void) {
     fprintf(stderr, "Sorry, the list is empty.\n");
     return 0;
   }
-  printf("Here is the movies list:\n");
+  printf("Here is the movie list:\n");
   Traverse(&movies, show_list);
   printf("You entered %u movies.\n", ListItemCount(&movies));
 
   DeleteAll(&movies);
-
   printf("Bye.\n");
 
   return 0;
-
 }
 
 void show_list(Item item) {
-  printf("Movie: %s   Rating: %d\n", item.title, item.rating);
+  printf("Movie: %s    Rating: %d\n", item.title, item.rating);
 }
 
 char* s_gets(char* st, int n) {

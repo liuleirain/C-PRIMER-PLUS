@@ -14,7 +14,7 @@ int ListIsEmpty(const List* plist) {
     return 0;
 }
 
-int listIsFull(const List* plist) {
+int ListIsFull(const List* plist) {
   Node* pt;
   int full;
 
@@ -43,7 +43,7 @@ int AddItem(List* plist, Item item) {
     plist->end->next = pnew;
   plist->end = pnew;
 
-  return 1
+  return 1;
 }
 
 unsigned int ListItemCount(List* plist) {
